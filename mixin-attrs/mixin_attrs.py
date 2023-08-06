@@ -1,7 +1,7 @@
 """
 Uses Python descriptors to add mixin attributes that are able to have default values.
 """
-from typing import Generic, TypeVar, Type, Optional, Callable, overload, Union, Literal
+from typing import Generic, TypeVar, Type, Optional, Callable
 import weakref
 
 T = TypeVar("T")
@@ -80,6 +80,9 @@ def optional_mixin_property(
     return OptionalMixinProperty(default_value)
 
 
+###########
+# EXAMPLE #
+###########
 TestMixinType = TypeVar("TestMixinType", bound="TestMixin")
 
 
@@ -104,31 +107,5 @@ class TestMixin:
         return self._z
 
 
-class Base(TestMixin):
+class HasMixinAttributes(TestMixin):
     ...
-
-
-class OtherBase(TestMixin):
-    def set_z(self, z: int) -> "OtherBase":
-        self._z = z + 1
-        return self
-
-
-def im_some_function() -> None:
-    import gc
-
-    b = Base()
-    print(b.get_z())
-    b = b.set_z(10)
-    print(b.get_z())
-    del b
-    print("deleted z")
-    gc.collect()
-
-
-if __name__ == "__main__":
-    im_some_function()
-    b = OtherBase()
-    print(b._y)
-    b._y = 34
-    print(b._y)
